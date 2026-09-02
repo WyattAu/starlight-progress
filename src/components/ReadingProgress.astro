@@ -1,0 +1,93 @@
+---
+interface Props {
+  height: number;
+  color: string;
+  zIndex: number;
+  transitionDuration: number;
+  hideAtStart: boolean;
+}
+
+const { height, color, zIndex, transitionDuration, hideAtStart } = Astro.props;
+---
+
+<div
+  class="reading-progress"
+  id="reading-progress"
+  role="progressbar"
+  aria-valuenow={0}
+  aria-valuemin={0}
+  aria-valuemax={100}
+  aria-label="Reading progress"
+  data-height={height}
+  data-color={color}
+  data-z-index={zIndex}
+  data-transition-duration={transitionDuration}
+  data-hide-at-start={String(hideAtStart)}
+/>
+
+<script>
+  function initReadingProgress() {
+    const bar = document.getElementById('reading-progress');
+    if (!bar) return;
+
+    const height = bar.dataset.height ?? '3';
+    const color = bar.dataset.color ?? 'var(--sl-color-accent)';
+    const zIndex = bar.dataset.zIndex ?? '9999';
+    const transitionDuration = bar.dataset.transitionDuration ?? '100';
+    const hideAtStart = bar.dataset.hideAtStart !== 'false';
+
+    bar.style.height = `${height}px`;
+    bar.style.background = color;
+    bar.style.zIndex = zIndex;
+    bar.style.transitionDuration = `${transitionDuration}ms`;
+
+    if (hideAtStart) {
+      bar.style.display = 'none';
+    }
+
+    let ticking = false;
+
+    function updateProgress() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+          const pct = Math.min((scrollTop / docHeight) * 100, 100);
+          bar.style.width = `${pct}%`;
+          bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+          if (hideAtStart) {
+            bar.style.display = pct < 1 ? 'none' : '';
+          }
+        }
+        ticking = false;
+      });
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    document.addEventListener('astro:after-swap', () => {
+      const newBar = document.getElementById('reading-progress');
+      if (!newBar) return;
+      newBar.style.height = `${height}px`;
+      newBar.style.background = color;
+      newBar.style.zIndex = zIndex;
+      newBar.style.transitionDuration = `${transitionDuration}ms`;
+      if (hideAtStart) {
+        newBar.style.display = 'none';
+      }
+      window.removeEventListener('scroll', updateProgress);
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    });
+  }
+
+  initReadingProgress();
+
+  document.addEventListener('astro:page-load', () => {
+    initReadingProgress();
+  });
+</script>

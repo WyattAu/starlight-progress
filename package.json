@@ -1,0 +1,38 @@
+{
+  "name": "starlight-progress",
+  "version": "0.1.0",
+  "description": "Starlight plugin providing a reading progress bar and collapsible TOC sidebar",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "starlight",
+    "astro",
+    "reading-progress",
+    "toc",
+    "docs"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^3.1.1",
+    "typescript": "^5.8.2",
+    "@astrojs/starlight": "^0.32.2",
+    "astro": "^5.5.4",
+    "jsdom": "^26.0.0",
+    "@testing-library/dom": "^10.4.0"
+  },
+  "peerDependencies": {
+    "@astrojs/starlight": ">=0.32.0",
+    "astro": ">=5.0.0"
+  }
+}

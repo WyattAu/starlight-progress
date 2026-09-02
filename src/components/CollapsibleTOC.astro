@@ -1,0 +1,77 @@
+---
+interface Props {
+  storageKey: string;
+  defaultCollapsed: boolean;
+}
+
+const { storageKey, defaultCollapsed } = Astro.props;
+---
+
+<details
+  id="starlight-toc-collapsible"
+  class="collapsible-toc"
+  data-storage-key={storageKey}
+  open={!defaultCollapsed}
+>
+  <summary
+    class="collapsible-toc__toggle"
+    aria-label="Toggle table of contents"
+  >
+    <span class="collapsible-toc__label">On this page</span>
+    <svg
+      class="collapsible-toc__chevron"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </summary>
+  <div class="collapsible-toc__content" id="starlight-toc-content">
+    <slot />
+  </div>
+</details>
+
+<script>
+  function initCollapsibleTOC() {
+    const details = document.getElementById(
+      'starlight-toc-collapsible'
+    ) as HTMLDetailsElement | null;
+    if (!details) return;
+
+    const storageKey = details.dataset.storageKey ?? 'starlight-toc-visible';
+    const stored = localStorage.getItem(storageKey);
+    if (stored !== null) {
+      try {
+        const visible = JSON.parse(stored) as boolean;
+        details.open = visible;
+      } catch {
+        // Ignore malformed stored values.
+      }
+    }
+
+    const observer = new MutationObserver(() => {
+      localStorage.setItem(storageKey, JSON.stringify(details.open));
+    });
+    observer.observe(details, { attributes: true, attributeFilter: ['open'] });
+
+    details.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        details.open = !details.open;
+      }
+    });
+  }
+
+  initCollapsibleTOC();
+
+  document.addEventListener('astro:page-load', () => {
+    initCollapsibleTOC();
+  });
+</script>

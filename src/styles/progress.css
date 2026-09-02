@@ -1,0 +1,77 @@
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--sl-color-accent);
+  z-index: 9999;
+  transition: width 100ms linear;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    animation: reading-progress-scroll linear;
+    animation-timeline: scroll();
+  }
+
+  @keyframes reading-progress-scroll {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+}
+
+.collapsible-toc {
+  margin-top: 0;
+}
+
+.collapsible-toc__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-weight: 600;
+  font-size: var(--sl-text-sm, 0.875rem);
+  color: var(--sl-color-white, #fff);
+  list-style: none;
+  user-select: none;
+}
+
+.collapsible-toc__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible-toc__toggle::marker {
+  display: none;
+  content: '';
+}
+
+.collapsible-toc__chevron {
+  transition: transform 200ms ease;
+}
+
+.collapsible-toc[open] .collapsible-toc__chevron {
+  transform: rotate(180deg);
+}
+
+.collapsible-toc__content {
+  overflow: hidden;
+  transition: max-height 200ms ease-out, opacity 200ms ease-out;
+}
+
+.collapsible-toc:not([open]) .collapsible-toc__content {
+  max-height: 0;
+  opacity: 0;
+}
+
+@media (max-width: 1023px) {
+  .collapsible-toc {
+    display: none;
+  }
+}
