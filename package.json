@@ -1,9 +1,20 @@
 {
-  "name": "starlight-progress",
+  "name": "@wyatt/starlight-progress",
   "version": "0.1.0",
   "description": "Starlight plugin providing a reading progress bar and collapsible TOC sidebar",
+  "author": "WyattAu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WyattAu/starlight-progress.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WyattAu/starlight-progress/issues"
+  },
+  "homepage": "https://github.com/WyattAu/starlight-progress#readme",
   "type": "module",
   "main": "src/index.ts",
+  "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -22,7 +33,6 @@
     "toc",
     "docs"
   ],
-  "license": "MIT",
   "devDependencies": {
     "vitest": "^3.1.1",
     "typescript": "^5.8.2",
