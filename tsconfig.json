@@ -13,9 +13,22 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "lib": ["ES2022", "DOM"],
-    "types": ["vitest/globals"]
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "vitest/globals"
+    ]
   },
-  "include": ["src/**/*.ts", "src/**/*.astro", "tests/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.astro",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests/scratch-site"
+  ]
 }

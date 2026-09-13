@@ -3,12 +3,15 @@ import { resolveOptions } from './options';
 import type { StarlightProgressOptions } from './types';
 import type { AstroIntegration } from 'astro';
 
-const readingProgressComponent = fileURLToPath(
-  new URL('./components/ReadingProgress.astro', import.meta.url)
-);
-const collapsibleTocComponent = fileURLToPath(
-  new URL('./components/CollapsibleTOC.astro', import.meta.url)
-);
+function componentUrl(relative: string): string {
+  const url = new URL(relative, import.meta.url);
+  // Under test runners import.meta.url may not be a file URL; keep the
+  // absolute URL form, which Vite resolves the same way.
+  return url.protocol === 'file:' ? fileURLToPath(url) : url.href;
+}
+
+const readingProgressComponent = componentUrl('./components/ReadingProgress.astro');
+const collapsibleTocComponent = componentUrl('./components/CollapsibleTOC.astro');
 
 const TOC_OPTIONS_MODULE_ID = 'virtual:starlight-progress/toc-options';
 const TOC_OPTIONS_RESOLVED_ID = '\0' + TOC_OPTIONS_MODULE_ID;
