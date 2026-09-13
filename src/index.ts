@@ -1,5 +1,51 @@
+import { fileURLToPath } from 'node:url';
 import { resolveOptions } from './options';
 import type { StarlightProgressOptions } from './types';
+import type { AstroIntegration } from 'astro';
+
+const readingProgressComponent = fileURLToPath(
+  new URL('./components/ReadingProgress.astro', import.meta.url)
+);
+const collapsibleTocComponent = fileURLToPath(
+  new URL('./components/CollapsibleTOC.astro', import.meta.url)
+);
+
+const TOC_OPTIONS_MODULE_ID = 'virtual:starlight-progress/toc-options';
+const TOC_OPTIONS_RESOLVED_ID = '\0' + TOC_OPTIONS_MODULE_ID;
+
+/**
+ * Exposes the resolved collapsible-TOC options to the component override via a
+ * virtual module, because Starlight renders component overrides without props.
+ */
+function tocOptionsIntegration(tocOptions: {
+  storageKey: string;
+  defaultCollapsed: boolean;
+}): AstroIntegration {
+  return {
+    name: 'starlight-progress-toc-options',
+    hooks: {
+      'astro:config:setup': ({ updateConfig }) => {
+        updateConfig({
+          vite: {
+            plugins: [
+              {
+                name: 'starlight-progress-toc-options',
+                resolveId(id: string) {
+                  if (id === TOC_OPTIONS_MODULE_ID) return TOC_OPTIONS_RESOLVED_ID;
+                },
+                load(id: string) {
+                  if (id === TOC_OPTIONS_RESOLVED_ID) {
+                    return `export default ${JSON.stringify(tocOptions)};`;
+                  }
+                },
+              },
+            ],
+          },
+        });
+      },
+    },
+  };
+}
 
 /**
  * Parameters passed to the Starlight `config:setup` hook.
@@ -22,22 +68,33 @@ export function starlightProgress(
   options?: StarlightProgressOptions
 ) {
   const resolved = resolveOptions(options);
+  const tocOptions = tocOptionsIntegration(resolved.collapsibleTOC);
 
   return {
     name: 'starlight-progress',
     hooks: {
-      'config:setup'({ config, updateConfig }: ConfigSetupParams) {
+      'config:setup'({
+        config,
+        updateConfig,
+        addIntegration,
+      }: ConfigSetupParams) {
+        const existing = (config.components as Record<string, string>) ?? {};
+
         updateConfig({
           components: {
-            ...(config.components as Record<string, string>),
+            ...existing,
             Head: resolved.readingProgress
-              ? './src/components/ReadingProgress.astro'
-              : (config.components as Record<string, string>)?.Head,
-            TOC: resolved.collapsibleTOC?.enabled
-              ? './src/components/CollapsibleTOC.astro'
-              : (config.components as Record<string, string>)?.TOC,
+              ? readingProgressComponent
+              : existing.Head,
+            TableOfContents: resolved.collapsibleTOC?.enabled
+              ? collapsibleTocComponent
+              : existing.TableOfContents,
           },
         });
+
+        if (resolved.collapsibleTOC.enabled) {
+          addIntegration?.(tocOptions);
+        }
       },
     },
   };

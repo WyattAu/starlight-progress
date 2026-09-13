@@ -25,7 +25,7 @@ const { height, color, zIndex, transitionDuration, hideAtStart } = Astro.props;
   data-hide-at-start={String(hideAtStart)}
 />
 
-<script>
+<script is:inline>
   function initReadingProgress() {
     const bar = document.getElementById('reading-progress');
     if (!bar) return;

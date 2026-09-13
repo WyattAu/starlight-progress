@@ -33,7 +33,7 @@ describe('starlightProgress plugin', () => {
       const call = updateConfig.mock.calls[0][0];
       expect(call).toHaveProperty('components');
       expect(call.components).toHaveProperty('Head');
-      expect(call.components).toHaveProperty('TOC');
+      expect(call.components).toHaveProperty('TableOfContents');
     });
 
     it('preserves existing component overrides', () => {

@@ -1,4 +1,13 @@
-import type { StarlightProgressOptions } from './types';
+import type {
+  CollapsibleTOCConfig,
+  ReadingProgressConfig,
+  StarlightProgressOptions,
+} from './types';
+
+export interface ResolvedOptions {
+  readingProgress: Required<ReadingProgressConfig>;
+  collapsibleTOC: Required<CollapsibleTOCConfig>;
+}
 
 const DEFAULTS = {
   readingProgress: {
@@ -21,7 +30,7 @@ const DEFAULTS = {
  */
 export function resolveOptions(
   options?: StarlightProgressOptions
-): Required<StarlightProgressOptions> {
+): ResolvedOptions {
   const rp = options?.readingProgress;
   const ct = options?.collapsibleTOC;
 
