@@ -4,8 +4,8 @@ Starlight plugin providing a reading progress bar and collapsible TOC sidebar.
 
 Overrides Starlight's `Head` and `TOC` components to add:
 
-- **Reading progress bar** — a thin accent-colored bar fixed to the top of the page that fills as the reader scrolls
-- **Collapsible TOC** — the "On this page" sidebar becomes collapsible, with the collapsed state persisted in `localStorage`
+- **Reading progress bar**; a thin accent-colored bar fixed to the top of the page that fills as the reader scrolls
+- **Collapsible TOC**; the "On this page" sidebar becomes collapsible, with the collapsed state persisted in `localStorage`
 
 ## Installation
 
